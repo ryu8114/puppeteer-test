@@ -4,20 +4,32 @@ import puppeteer from "puppeteer-core";
 
 export async function GET(_request: NextRequest) {
   try {
-    // ブラウザを起動
-    const executablePath = process.env.NODE_ENV === 'production'
-    ? await chromium.executablePath()
-    : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-
-    const browser = await puppeteer.launch({
-      executablePath,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox'
-      ],
-      headless: true,
-      ignoreHTTPSErrors: true,
-    });
+    let browser;
+    
+    if (process.env.NODE_ENV === 'development') {
+      // 開発環境用の設定
+      const puppeteer = await import('puppeteer');
+      browser = await puppeteer.default.launch({
+        headless: "new",
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-gpu'
+        ]
+      });
+    } else {
+      // 本番環境用の設定
+      const puppeteer = await import('puppeteer-core');
+      const chromium = await import('@sparticuz/chromium');
+      
+      browser = await puppeteer.default.launch({
+        args: chromium.default.args,
+        defaultViewport: chromium.default.defaultViewport,
+        executablePath: await chromium.default.executablePath(),
+        headless: true,
+        ignoreHTTPSErrors: true,
+      });
+    }
 
     try {
       // ブラウザのタブを開く
