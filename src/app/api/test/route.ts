@@ -10,7 +10,7 @@ export async function GET(_request: NextRequest) {
       // 開発環境用の設定
       const puppeteer = await import('puppeteer');
       browser = await puppeteer.default.launch({
-        headless: "new",
+        headless: true,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
@@ -27,7 +27,6 @@ export async function GET(_request: NextRequest) {
         defaultViewport: chromium.default.defaultViewport,
         executablePath: await chromium.default.executablePath(),
         headless: true,
-        ignoreHTTPSErrors: true,
       });
     }
 
