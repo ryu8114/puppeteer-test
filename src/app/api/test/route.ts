@@ -46,7 +46,7 @@ export async function GET(_request: NextRequest) {
     } catch (error) {
       console.error('Operation error:', error);
       return NextResponse.json(
-        { status: "ERROR", message: error.message },
+        { status: "ERROR" },
         { status: 500 }
       );
     } finally {
@@ -56,7 +56,7 @@ export async function GET(_request: NextRequest) {
   } catch (error) {
     console.error('Browser launch error:', error);
     return NextResponse.json(
-      { status: "ERROR", message: error.message },
+      { status: "ERROR" },
       { status: 500 }
     );
   }
